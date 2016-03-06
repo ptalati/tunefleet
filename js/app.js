@@ -1,13 +1,13 @@
 ﻿(function () {
     var app = angular.module('tuneFleetStore', ['angular-loading-bar', 'ngDialog']);
 
-    app.constant('baseUrl', 'http://tunefleet.braindemo.com/');
+    app.constant('baseUrl', 'http://localhost:14550/');
     app.constant('isMobile', navigator.userAgent.match(/(iPad)|(iPhone)|(iPod)|(android)|(webOS)/i));
 
     app.config([
         'cfpLoadingBarProvider', function (cfpLoadingBarProvider) {
-            cfpLoadingBarProvider.includeSpinner = true;
-            cfpLoadingBarProvider.spinnerTemplate = '<div id="loading-bar-spinner"><div class="spinner"><img src="images/loading.gif" /> Loading...</div></div>';
+            //cfpLoadingBarProvider.includeSpinner = true;
+            //cfpLoadingBarProvider.spinnerTemplate = '<div id="loading-bar-spinner"><div class="spinner"><img src="images/loading.gif" /> Loading...</div></div>';
         }
     ]);
 
