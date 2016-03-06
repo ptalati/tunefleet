@@ -1,0 +1,7 @@
+﻿body { background: #094fc2; color: #fff; }
+
+.navbar { background-image: linear-gradient(to bottom, #0a3784 0, #041a3f 100%); }
+.navbar .navbar-brand { background: url("../images/logo.png") no-repeat 0; text-indent: -999em; width: 170px; }
+.navbar .navbar-toggle { background: #333; }
+
+#main { padding-top: 4.5em; }
