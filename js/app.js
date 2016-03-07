@@ -1,12 +1,12 @@
 ﻿(function () {
     var app = angular.module('tuneFleetStore', ['angular-loading-bar', 'ngDialog']);
 
-    app.constant('baseUrl', 'http://tunefleet.braindemo.com/');
+    app.constant('baseUrl', 'http://localhost:14550/');
     app.constant('isMobile', navigator.userAgent.match(/(iPad)|(iPhone)|(iPod)|(android)|(webOS)/i));
 
     app.config([
         'cfpLoadingBarProvider', function (cfpLoadingBarProvider) {
-            //cfpLoadingBarProvider.includeSpinner = true;
+            cfpLoadingBarProvider.includeSpinner = false;
             //cfpLoadingBarProvider.spinnerTemplate = '<div id="loading-bar-spinner"><div class="spinner"><img src="images/loading.gif" /> Loading...</div></div>';
         }
     ]);
@@ -40,9 +40,11 @@
             $scope.services = [];
             $scope.search = {};
             $scope.hideStep = 1;
+            $scope.loaded = false;
 
             $scope.$on('cfpLoadingBar:completed', function () {
                 //console.log('Loading Finished');
+                $scope.loaded = true;
             });
 
             $scope.fetchStates = function () {
@@ -81,6 +83,7 @@
                     }
                 }).success(function (result) {
                     $scope.categories = result.data;
+                    $scope.hideStep = 2;
                     console.log("Categories loaded - " + $scope.categories.length);
                 }).error(function (data, status, headers, config) {
                     console.log("Error [categories] - " + status);
@@ -97,6 +100,7 @@
                     }
                 }).success(function (result) {
                     $scope.services = result.data;
+                    $scope.hideStep = 3;
                     console.log("Services loaded - " + $scope.services.length);
                 }).error(function (data, status, headers, config) {
                     console.log("Error [services] - " + status);
@@ -115,13 +119,13 @@
                 }
             }, true);
 
-            $scope.startSearch = function(search) {
-                $scope.hideStep = 2;
+            $scope.startSearch = function (search) {
+                $scope.categories = [];
                 $scope.fetchCategories();
             };
 
             $scope.showServices = function (category) {
-                $scope.hideStep = 3;
+                $scope.services = [];
                 $scope.fetchServices(category.id, $scope.search.city.id);
             };
 
@@ -133,6 +137,11 @@
             $scope.generateUrl = function (icon) {
                 console.log(baseUrl + icon);
                 return icon;
+            };
+
+            $scope.selectService = function (service) {
+                $scope.service = service;
+                $scope.hideStep = 4;
             };
         }
     ]);
