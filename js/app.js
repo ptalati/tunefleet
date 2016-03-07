@@ -1,7 +1,7 @@
 ﻿(function () {
     var app = angular.module('tuneFleetStore', ['angular-loading-bar', 'ngDialog']);
 
-    app.constant('baseUrl', 'http://localhost:14550/');
+    app.constant('baseUrl', 'http://tunefleet.braindemo.com/');
     app.constant('isMobile', navigator.userAgent.match(/(iPad)|(iPhone)|(iPod)|(android)|(webOS)/i));
 
     app.config([
