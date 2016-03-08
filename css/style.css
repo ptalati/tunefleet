@@ -2,9 +2,12 @@
 
 .navbar { background-image: linear-gradient(to bottom, #0a3784 0, #041a3f 100%); }
 .navbar .navbar-brand { background: url("../images/logo.png") no-repeat 0; text-indent: -999em; width: 170px; }
-.navbar .navbar-toggle { background: #333; }
+.navbar .navbar-toggle { background: #333; line-height: 14px; }
+.navbar .navbar-toggle.collapsed { cursor: pointer; }
 
 #main { padding-top: 4.5em; }
 
 #loading-bar .bar { background: #33ba3a; height: 4px; }
 #loading-bar-spinner .spinner-icon { width: 18px; height: 18px; border: solid 4px transparent; border-top-color: #cadd22; border-left-color: #cadd22; border-radius: 10px; }
+
+span.red { color: #F00; }

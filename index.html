@@ -41,6 +41,7 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>-->
+                    <div id="area" class="navbar-toggle collapsed" ng-click="changeLocation()">{{booking.Area.Name}}</div>
 
                     <a class="navbar-brand" href="#">TuneFleet</a>
                 </div>
@@ -54,81 +55,138 @@
             </div>
         </nav>
 
-        <div id="main" class="container">
-            <form name="searchForm" class="form-container" ng-submit="searchForm.$valid && startSearch(search)" ng-show="hideStep === 1">
-                <div class="form-group" ng-show="states.length > 0">
-                    <select class="form-control" name="state" ng-model="search.state" ng-required="true" ng-options="s.name for s in states | orderBy:'name' track by s.id">
+        <div id="main" class="container" data-ng-init="loadDefault()">
+            <form name="searchForm" class="form-container" ng-submit="searchForm.$valid && startSearch(booking)" ng-show="hideStep === 1">
+                <div class="form-group" ng-show="states.length > 1">
+                    <select class="form-control" name="state" ng-model="booking.State" ng-required="true" ng-options="s.Name for s in states | orderBy:'Name' track by s.ID">
                         <option value=''>Choose State...</option>
                     </select>
                 </div>
 
-                <div class="form-group" ng-show="cities.length > 0">
-                    <select class="form-control" name="city" ng-model="search.city" ng-required="true" ng-options="c.name for c in cities | orderBy:'name' track by c.id">
+                <div class="form-group" ng-show="cities.length > 1">
+                    <select class="form-control" name="city" ng-model="booking.City" ng-required="true" ng-options="c.Name for c in cities | orderBy:'Name' track by c.ID">
                         <option value=''>Choose City...</option>
                     </select>
                 </div>
 
-                <button type="submit" class="btn btn-default btn-block" ng-show="loaded && searchForm.city.$valid && searchForm.state.$valid">Search</button>
+                <div class="form-group" ng-show="areas.length > 0">
+                    <select class="form-control" name="area" ng-model="booking.Area" ng-required="true" ng-options="a.Name for a in areas | orderBy:'Name' track by a.ID">
+                        <option value=''>Choose Area...</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="btn btn-default btn-block" ng-show="loaded && searchForm.city.$valid && searchForm.state.$valid && searchForm.area.$valid">Search</button>
             </form>
 
             <div class="row categories" ng-show="hideStep === 2">
-                <div class="col-sm-6 col-md-4" ng-repeat="c in categories | orderBy:'name' track by c.id">
+                <div class="col-sm-6 col-md-4" ng-repeat="c in categories | orderBy:'Name' track by c.ID">
                     <div class="thumbnail">
-                        <a href="javascript:void(0);" ng-click="showServices(c)"><img data-ng-src="{{generateUrl(c.icon)}}" alt="{{c.name}}" /></a>
+                        <a href="javascript:void(0);" ng-click="showServices(c)"><img data-ng-src="{{generateUrl(c.Icon)}}" alt="{{c.Name}}" /></a>
                     </div>
                 </div>
             </div>
 
-            <div class="list-group services" ng-show="hideStep === 3 && services.length > 0">
-                <a href="javascript:void(0);" ng-click="selectService(s)" class="list-group-item" ng-repeat="s in services | orderBy:'name' track by s.id">
-                    <h4 class="list-group-item-heading">{{s.name}} @ &#8377; {{s.price | number:2}}</h4>
-                    <p class="list-group-item-text">{{s.description}}</p>
-                </a>
+            <div class="services-display">
+                <div class="list-group services" ng-show="hideStep === 3 && services.length > 0">
+                    <a href="javascript:void(0);" ng-click="selectService(s)" class="list-group-item" ng-repeat="s in services | orderBy:'Name' track by s.ID">
+                        <h4 class="list-group-item-heading">{{s.Name}} @ &#8377; {{s.Price | number:2}}</h4>
+                        <p class="list-group-item-text">{{s.Description}}</p>
+                    </a>
+                </div>
+
+                <p ng-show="hideStep === 3 && services.length === 0">No services available in your region. Please check again later.</p>
             </div>
 
-            <p ng-show="hideStep === 3 && services.length === 0">No services available in your region. Please check again later.</p>
-
-            <form class="form-container" ng-show="hideStep === 4">
+            <form name="scheduleForm" class="form-container schedule" ng-submit="scheduleForm.$valid && updateSchedule(schedule)" ng-show="hideStep === 4">
                 <div class="form-group">
-                    <label for="first_name">First Name:</label>
-                    <input type="text" class="form-control" id="first_name" ng-model="user.FirstName" placeholder="First Name" required="required" />
+                    <label for="schedule_date">Date<span class="red">*</span>:</label>
+                    <input type="date" class="form-control" id="schedule_date" ng-model="schedule.Date" placeholder="dd-mm-yyyy" ng-required="true" />
+                </div>
+
+                <button type="submit" class="btn btn-default btn-block">Submit</button><br/>
+            </form>
+
+            <form name="userForm" class="form-container" ng-submit="userForm.$valid && updateUser(user)" ng-show="hideStep === 5">
+                <div class="form-group">
+                    <label for="first_name">First Name<span class="red">*</span>:</label>
+                    <input type="text" class="form-control" id="first_name" ng-model="user.FirstName" placeholder="First Name" ng-required="true" />
                 </div>
 
                 <div class="form-group">
-                    <label for="last_name">Last Name:</label>
-                    <input type="text" class="form-control" id="last_name" ng-model="user.LastName" placeholder="Last Name" required="required" />
+                    <label for="last_name">Last Name<span class="red">*</span>:</label>
+                    <input type="text" class="form-control" id="last_name" ng-model="user.LastName" placeholder="Last Name" ng-required="true" />
                 </div>
 
                 <div class="form-group">
-                    <label for="email">Email:</label>
-                    <input type="email" class="form-control" id="email" ng-model="user.Email" placeholder="Email" required="required" />
+                    <label for="email">Email<span class="red">*</span>:</label>
+                    <input type="email" class="form-control" id="email" ng-model="user.Email" placeholder="Email" ng-required="true" />
                 </div>
 
                 <div class="form-group">
-                    <label for="address">Address:</label>
-                    <input type="text" class="form-control" id="address" ng-model="user.Address" placeholder="Address" required="required"/>
+                    <label for="phone">Phone<span class="red">*</span>:</label>
+                    <input type="tel" class="form-control" id="phone" ng-model="user.Phone" placeholder="Phone" ng-required="true" />
+                </div>
+
+                <div class="form-group">
+                    <label for="address">Address<span class="red">*</span>:</label>
+                    <input type="text" class="form-control" id="address" ng-model="user.Address" placeholder="Address" ng-required="true" />
                 </div>
 
                 <div class="form-group" ng-show="states.length > 0">
-                    <label>City:</label><br />
-                    <label><strong>{{search.city.name}}, {{search.state.name}}</strong></label>
+                    <label>City<span class="red">*</span>:</label>
+                    <div class="form-group">
+                        <select class="form-control" name="state" ng-model="user.State" ng-required="true" ng-options="s.Name for s in states | orderBy:'Name' track by s.ID">
+                            <option value=''>Choose State...</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <select class="form-control" name="city" ng-model="user.City" ng-required="true" ng-options="c.Name for c in cities | orderBy:'Name' track by c.ID">
+                            <option value=''>Choose City...</option>
+                        </select>
+                    </div>
                 </div>
 
                 <div class="form-group">
-                    <label for="zip">Zip:</label>
-                    <input type="text" class="form-control" id="zip" ng-model="user.Zip" placeholder="Zip" required="required" />
-                </div>
-
-                <div class="form-group">
-                    <label for="phone">Phone:</label>
-                    <input type="text" class="form-control" id="phone" ng-model="user.Phone" placeholder="Phone" required="required" />
+                    <label for="zip">Zip<span class="red">*</span>:</label>
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <input type="number" class="form-control" id="zip" ng-model="user.Zip" placeholder="Zip" ng-required="true" maxlength="6" />
+                        </div>
+                    </div>
                 </div>
 
                 <button type="submit" class="btn btn-default btn-block">Submit</button><br />
             </form>
 
-            <div class="back" ng-show="hideStep > 1 && loaded">
-                <button type="button" class="btn btn-default btn-block" ng-click="goBack(hideStep)">Back</button>
+            <div class="confirmation" ng-show="hideStep === 6">
+                <table class="table table-bordered">
+                    <tr>
+                        <td>Name</td>
+                        <td>{{user.FirstName}} {{user.LastName}}</td>
+                    </tr>
+                    <tr>
+                        <td>Address</td>
+                        <td>{{user.Address}}, {{user.City.Name}} {{user.Zip}}, {{user.State.Name}}</td>
+                    </tr>
+                    <tr>
+                        <td>Service</td>
+                        <td>{{service.Name}}</td>
+                    </tr>
+                    <tr>
+                        <td>Appointment</td>
+                        <td>{{schedule.Date | date:'dd-MM-yyyy'}}</td>
+                    </tr>
+                    <tr>
+                        <td>Amount</td>
+                        <td>&#8377; {{service.Price | number:2}}</td>
+                    </tr>
+                </table>
+
+                <button type="button" class="btn btn-primary btn-block">Confirm Booking</button><br />
+            </div>
+
+            <div class="back" ng-show="hideStep > 2 && loaded">
+                <button type="button" class="btn btn-default btn-block" ng-click="goBack(hideStep)">Back</button><br/>
             </div>
         </div><!-- /.container -->
     </div>
@@ -170,6 +228,10 @@
 
             navigator.geolocation.getCurrentPosition(onSuccess, onError);
         }
+
+        //if (!localStorage.pageLoadCount) localStorage.pageLoadCount = 0;
+        //localStorage.pageLoadCount = parseInt(localStorage.pageLoadCount) + 1;
+        //document.getElementById('count').textContent = localStorage.pageLoadCount;
     </script>
 </body>
 </html>
