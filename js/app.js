@@ -1,6 +1,7 @@
 ﻿(function () {
     var app = angular.module('tuneFleetStore', ['angular-loading-bar', 'ngDialog']);
 
+    //app.constant('baseUrl', 'http://localhost:14550/');
     app.constant('baseUrl', 'http://tunefleet.braindemo.com/');
     app.constant('isMobile', navigator.userAgent.match(/(iPad)|(iPhone)|(iPod)|(android)|(webOS)/i));
 
@@ -39,6 +40,7 @@
             $scope.areas = [];
             $scope.categories = [];
             $scope.services = [];
+            $scope.timeSlots = [];
             $scope.booking = {};
             $scope.user = {};
             $scope.hideStep = 1;
@@ -231,6 +233,7 @@
 
             $scope.selectService = function (service) {
                 $scope.service = service;
+                $scope.getTimeSlots(service.Duration);
                 $scope.hideStep = 4;
             };
 
@@ -246,6 +249,46 @@
 
             $scope.updateUser = function(user) {
                 $scope.hideStep = 6;
+            };
+
+            $scope.getTimeSlots = function (duration) {
+                if (typeof duration === "undefined") return [];
+
+                var currentTime = moment();
+                var startTime = moment(currentTime.format('MM-DD-YYYY') + ' 10:00 AM', 'MM-DD-YYYY HH:mm A');
+                var endTime = moment(currentTime.format('MM-DD-YYYY') + ' 18:00 PM', 'MM-DD-YYYY HH:mm A');
+                
+                for (var m = startTime; m.isBefore(endTime); m.add(duration, 'minutes')) {
+                    var st = moment(m.format("MM-DD-YYYY HH:mm A"), "MM-DD-YYYY HH:mm A");
+                    var et = moment(m.format("MM-DD-YYYY HH:mm A"), "MM-DD-YYYY HH:mm A").add(duration, 'minutes');
+                    var item = {
+                        Date: m,
+                        StartTime: st.format("HH:mm A"),
+                        EndTime: et.format("HH:mm A"),
+                        Selected: false,
+                        Active: st.isSameOrAfter(currentTime)
+                    };
+
+                    //console.log(st.format('YYYY-MM-DD HH:mm A'));
+                    //console.log(et.format('YYYY-MM-DD HH:mm A'));
+                    //console.log(item);
+                    
+                    $scope.timeSlots.push(item);
+                }
+            };
+
+            $scope.selectTime = function (schedule) {
+                if (!schedule.Active) return;
+
+                $scope.schedule.Timeslot = schedule;
+
+                $.each($scope.timeSlots, function(index, value) {
+                    $scope.timeSlots[index].Selected = false;
+
+                    if (value === schedule) {
+                        $scope.timeSlots[index].Selected = true;
+                    }
+                });
             };
         }
     ]);
