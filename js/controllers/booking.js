@@ -33,8 +33,6 @@
             });
 
             $scope.routeChanges = function() {
-                console.log($state.params.categoryId);
-
                 if ($state.params.categoryId) {
                     $.each($scope.categories, function (i, v) {
                         if (v.ID === $state.params.categoryId) {
@@ -227,7 +225,7 @@
             $scope.getTimeSlots = function (duration) {
                 if (typeof duration === "undefined" || typeof $scope.booking.Schedule.Date === "undefined") return [];
 
-                var scheduleTime = moment($scope.booking.Schedule.Date);
+                var scheduleTime = moment($scope.booking.Schedule.Date, "DD-MM-YYYY");
                 var startTime = moment(scheduleTime.format('MM-DD-YYYY') + ' 10:00', 'MM-DD-YYYY HH:mm');
                 var endTime = moment(scheduleTime.format('MM-DD-YYYY') + ' 18:00', 'MM-DD-YYYY HH:mm').subtract(duration - 60, 'minutes');
 
@@ -306,6 +304,9 @@
             $scope.$watch('booking.Search.State', function (newVal, oldVal) {
                 if ($scope.booking.Search.State) {
                     if ($scope.booking.Search.State.ID > 0) {
+                        localStorage.stateId = $scope.booking.Search.State.ID;
+                        localStorage.stateName = $scope.booking.Search.State.Name;
+
                         $scope.fetchCities($scope.booking.Search.State.ID);
                     }
 
@@ -316,10 +317,24 @@
             $scope.$watch('booking.Search.City', function (newVal, oldVal) {
                 if ($scope.booking.Search.City) {
                     if ($scope.booking.Search.City.ID > 0) {
+                        localStorage.cityId = $scope.booking.Search.City.ID;
+                        localStorage.cityName = $scope.booking.Search.City.Name;
+
                         $scope.fetchAreas($scope.booking.Search.City.ID);
                     }
 
                     console.log("City changed - " + $scope.booking.Search.City.ID);
+                }
+            }, true);
+
+            $scope.$watch('booking.Search.Area', function (newVal, oldVal) {
+                if ($scope.booking.Search.Area) {
+                    if ($scope.booking.Search.Area.ID > 0) {
+                        localStorage.areaId = $scope.booking.Search.Area.ID;
+                        localStorage.areaName = $scope.booking.Search.Area.Name;
+                    }
+
+                    console.log("Area changed - " + $scope.booking.Search.Area.ID);
                 }
             }, true);
 

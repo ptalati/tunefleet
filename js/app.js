@@ -5,11 +5,12 @@
         'ui.router',
         'angular-loading-bar',
         'ngDialog',
+        'ui.datepicker',
         'booking-controller'
     ]);
 
-    //app.constant('baseUrl', 'http://localhost:14550/');
-    app.constant('baseUrl', 'http://tunefleet.braindemo.com/');
+    app.constant('baseUrl', 'http://localhost:14550/');
+    //app.constant('baseUrl', 'http://tunefleet.braindemo.com/');
     app.constant('isMobile', navigator.userAgent.match(/(iPad)|(iPhone)|(iPod)|(android)|(webOS)/i));
 
     app.config([
@@ -42,7 +43,7 @@
     app.config([
         '$stateProvider', '$urlRouterProvider', function ($stateProvider, $urlRouterProvider) {
             $stateProvider.state("welcome", {
-                    url: "/",
+                    url: "/welcome",
                     templateUrl: 'templates/home.html'
                 }).state("login", {
                     url: "/login",
@@ -89,12 +90,21 @@
                     templateUrl: 'templates/booking-confirmation.html'
                 });
 
-            $urlRouterProvider.otherwise('/');
+            $urlRouterProvider.otherwise(function ($injector, $location) {
+                var $state = $injector.get("$state");
+
+                if (!localStorage["areaId"]) {
+                    $state.go('booking.locate');
+                } else {
+                    $state.go("welcome");
+                }
+            });
         }
     ]);
 
     app.controller('TuneFleetController', [
-        '$scope', '$http', '$log', '$interval', 'baseUrl', '$location', function ($scope, $http, $log, $interval, baseUrl, $location) {
+        '$scope', '$http', '$log', '$interval', 'baseUrl', '$location', '$state', '$rootScope',
+        function ($scope, $http, $log, $interval, baseUrl, $location, $state, $rootScope) {
             $scope.loggedIn = false;
             $scope.showMenu = true;
 
@@ -105,6 +115,12 @@
                 if ($location.path() === '/login' || $location.path() === '/register') $scope.showMenu = false;
                 else $scope.showMenu = true;
             });
+
+            $scope.getCurrentArea = function () {
+                if (typeof localStorage["areaId"] !== "undefined") {
+                    return localStorage["areaName"] + ", " + localStorage["cityName"];
+                }
+            };
         }
     ]);
 })();
