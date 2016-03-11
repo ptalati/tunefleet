@@ -1,0 +1,51 @@
+﻿<div class="booking">
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Service</th>
+            <th class="text-right">Price</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>
+                <p>{{booking.Category.Name}} > {{booking.Service.Name}} ({{booking.Service.ServiceTypeName}})</p>
+                <p>{{booking.Car.Make.Name}} - {{booking.Car.Model.Name}}</p>
+                <p>{{getDisplayDate(booking.Schedule)}}</p>
+            </td>
+            <td class="text-right">&#8377; {{booking.Service.Price | number:2}}</td>
+        </tr>
+        </tbody>
+        <tfoot>
+        <tr>
+            <td><strong>Total</strong></td>
+            <td class="text-right"><strong>&#8377; {{booking.Service.Price | number:2}}</strong></td>
+        </tr>
+        </tfoot>
+    </table>
+
+    <div class="form-group">
+        <div class="radio-inline">
+            <label>
+                <input type="radio" name="payment" ng-model="booking.Payment" value="cash_on_complete" checked>
+                Cash On Complete
+            </label>
+        </div>
+        <div class="radio-inline disabled">
+            <label>
+                <input type="radio" name="payment" ng-model="booking.Payment" value="pre_paid" disabled>
+                Pre-paid
+            </label>
+        </div>
+    </div>
+
+    <div class="row action">
+        <div class="col-xs-6">
+            <a ui-sref="booking.car({categoryId: booking.Category.ID, makeId: booking.Car.Make.ID, modelId: booking.Car.Model.ID, serviceId: booking.Service.ID, schedule: booking.Schedule, name: booking.Personal.Name, email: booking.Personal.Email, phone: booking.Personal.Phone})" class="btn btn-block btn-default">Back</a>
+        </div>
+
+        <div class="col-xs-6">
+            <a ui-sref="booking.confirmation({categoryId: booking.Category.ID, makeId: booking.Car.Make.ID, modelId: booking.Car.Model.ID, serviceId: booking.Service.ID, schedule: booking.Schedule, name: booking.Personal.Name, email: booking.Personal.Email, phone: booking.Personal.Phone, regNumber: booking.Car.RegNumber, serviceAddress: booking.Car.ServiceAddress, paymentMethod: booking.Payment})" class="btn btn-block btn-info">Next</a>
+        </div>
+    </div>
+</div>

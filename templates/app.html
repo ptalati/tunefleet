@@ -1,0 +1,115 @@
+﻿<div class="app" data-ng-init="loadDefault()" ng-show="loaded">
+    <form name="searchForm" class="form-container" ng-submit="searchForm.$valid && startSearch(booking)" ng-show="hideStep === 1">
+        <div class="form-group" ng-show="states.length > 1">
+            <select class="form-control" name="state" ng-model="booking.State" ng-required="true" ng-options="s.Name for s in states | orderBy:'Name' track by s.ID">
+                <option value=''>Choose State...</option>
+            </select>
+        </div>
+
+        <div class="form-group" ng-show="cities.length > 1">
+            <select class="form-control" name="city" ng-model="booking.City" ng-required="true" ng-options="c.Name for c in cities | orderBy:'Name' track by c.ID">
+                <option value=''>Choose City...</option>
+            </select>
+        </div>
+
+        <div class="form-group" ng-show="areas.length > 0">
+            <select class="form-control" name="area" ng-model="booking.Area" ng-required="true" ng-options="a.Name for a in areas | orderBy:'Name' track by a.ID">
+                <option value=''>Choose Area...</option>
+            </select>
+        </div>
+
+        <button type="submit" class="btn btn-default btn-block" ng-show="searchForm.city.$valid && searchForm.state.$valid && searchForm.area.$valid">Search</button>
+    </form>
+
+    <div class="row categories" ng-show="hideStep === 2">
+        <div class="col-sm-6 col-md-4" ng-repeat="c in categories | orderBy:'Name' track by c.ID">
+            <div class="thumbnail">
+                <a href="javascript:void(0);" ng-click="showServices(c)"><img data-ng-src="{{generateUrl(c.Icon)}}" alt="{{c.Name}}" /></a>
+            </div>
+        </div>
+    </div>
+
+    <div class="services-display">
+        <div class="list-group services" ng-show="hideStep === 3 && services.length > 0">
+            <a href="javascript:void(0);" ng-click="selectService(s)" class="list-group-item" ng-repeat="s in services | orderBy:'Name' track by s.ID">
+                <h4 class="list-group-item-heading">{{s.Name}} @ &#8377; {{s.Price | number:2}}</h4>
+                <p><small>Duration: {{s.Duration}} minutes</small></p>
+                <p class="list-group-item-text">{{s.Description}}</p>
+            </a>
+        </div>
+
+        <p ng-show="hideStep === 3 && services.length === 0">No services available in your region. Please check again later.</p>
+    </div>
+
+    <form name="scheduleForm" class="form-container schedule" ng-submit="scheduleForm.$valid && updateSchedule(schedule)" ng-show="hideStep === 4">
+        <div class="form-group">
+            <label for="schedule_date">Date<span class="red">*</span>:</label>
+            <input type="date" class="form-control" id="schedule_date" ng-model="schedule.Date" placeholder="dd-mm-yyyy" ng-required="true" />
+        </div>
+
+        <div class="list-group" ng-show="schedule.Date">
+            <a href="javascript:void(0);" class="list-group-item {{s.Selected ? 'active' : ''}} {{s.Active ? '' : 'disabled'}}" ng-click="selectTime(s)" ng-repeat="s in timeSlots">{{s.StartTime}} - {{s.EndTime}}</a>
+        </div>
+
+        <button type="submit" class="btn btn-default btn-block">Submit</button><br />
+    </form>
+
+    <form name="userForm" class="form-container" ng-submit="userForm.$valid && updateUser(user)" ng-show="hideStep === 5">
+        <div class="form-group">
+            <label for="first_name">First Name<span class="red">*</span>:</label>
+            <input type="text" class="form-control" id="first_name" ng-model="user.FirstName" placeholder="First Name" ng-required="true" />
+        </div>
+
+        <div class="form-group">
+            <label for="last_name">Last Name<span class="red">*</span>:</label>
+            <input type="text" class="form-control" id="last_name" ng-model="user.LastName" placeholder="Last Name" ng-required="true" />
+        </div>
+
+        <div class="form-group">
+            <label for="email">Email<span class="red">*</span>:</label>
+            <input type="email" class="form-control" id="email" ng-model="user.Email" placeholder="Email" ng-required="true" />
+        </div>
+
+        <div class="form-group">
+            <label for="phone">Phone<span class="red">*</span>:</label>
+            <input type="tel" class="form-control" id="phone" ng-model="user.Phone" placeholder="Phone" ng-required="true" />
+        </div>
+
+        <button type="submit" class="btn btn-default btn-block">Submit</button><br />
+    </form>
+
+    <div class="confirmation" ng-show="hideStep === 6">
+        <table class="table table-bordered">
+            <tr>
+                <td>Name</td>
+                <td>{{user.FirstName}} {{user.LastName}}</td>
+            </tr>
+            <tr>
+                <td>Address</td>
+                <td>{{user.Address}}, {{user.City.Name}} {{user.Zip}}, {{user.State.Name}}</td>
+            </tr>
+            <tr>
+                <td>Service</td>
+                <td>{{service.Name}}</td>
+            </tr>
+            <tr>
+                <td>Type</td>
+                <td>{{service.ServiceTypeName}}</td>
+            </tr>
+            <tr>
+                <td>Appointment</td>
+                <td>{{schedule.Date | date:'dd-MM-yyyy'}} {{schedule.Timeslot.StartTime}}</td>
+            </tr>
+            <tr>
+                <td>Amount</td>
+                <td>&#8377; {{service.Price | number:2}}</td>
+            </tr>
+        </table>
+
+        <button type="button" class="btn btn-primary btn-block">Confirm Booking</button><br />
+    </div>
+
+    <div class="back" ng-show="hideStep > 2">
+        <button type="button" class="btn btn-default btn-block" ng-click="goBack(hideStep)">Back</button><br />
+    </div>
+</div>

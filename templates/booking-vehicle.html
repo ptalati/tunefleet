@@ -1,0 +1,23 @@
+﻿<div class="booking">
+    <div class="form-group" ng-show="makes.length > 0">
+        <select class="form-control" name="make" ng-model="booking.Car.Make" ng-required="true" ng-options="m.Name for m in makes | orderBy:'Name' track by m.ID">
+            <option value=''>Choose Make...</option>
+        </select>
+    </div>
+
+    <div class="form-group" ng-show="models.length > 0">
+        <select class="form-control" name="model" ng-model="booking.Car.Model" ng-required="true" ng-options="m.Name for m in models | orderBy:'Name' track by m.ID">
+            <option value=''>Choose Model...</option>
+        </select>
+    </div>
+
+    <div class="row action">
+        <div class="col-xs-6">
+            <a ui-sref="booking.categories" class="btn btn-block btn-default">Back</a>
+        </div>
+
+        <div class="col-xs-6">
+            <a ui-sref="booking.services({categoryId: booking.Category.ID, makeId: booking.Car.Make.ID, modelId: booking.Car.Model.ID})" class="btn btn-block btn-info">Next</a>
+        </div>
+    </div>
+</div>

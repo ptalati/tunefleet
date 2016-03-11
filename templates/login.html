@@ -1,0 +1,19 @@
+﻿<div class="login">
+    <form id="form-container">
+        <div class="form-group">
+            <label for="email">Email<span class="red">*</span>:</label>
+            <input type="email" class="form-control" id="email" ng-model="login.Email" ng-required="true"/>
+        </div>
+
+        <div class="form-group">
+            <label for="password">Password<span class="red">*</span>:</label>
+            <input type="password" class="form-control" id="password" ng-model="login.Password" ng-required="true"/>
+        </div>
+
+        <input type="submit" class="btn btn-info btn-block" value="Login"/>
+        <a ui-sref="welcome" class="btn btn-block btn-default">Cancel</a>
+    </form><br/>
+
+    <a ui-sref="forgotpassword" class="btn btn-block btn-default">Forgot password?</a>
+    <a ui-sref="register" class="btn btn-block btn-default">Get A Free Account?</a>
+</div>

@@ -1,0 +1,20 @@
+﻿<div class="booking">
+    <div class="form-group">
+        <label for="schedule_date">Date<span class="red">*</span>:</label>
+        <input type="date" class="form-control" id="schedule_date" ng-model="booking.Schedule.Date" placeholder="dd-mm-yyyy" ng-required="true" />
+    </div>
+    
+    <div class="list-group" ng-show="booking.Schedule.Date">
+        <a ui-sref="booking.personal({categoryId: booking.Category.ID, makeId: booking.Car.Make.ID, modelId: booking.Car.Model.ID, serviceId: booking.Service.ID, schedule: s.DateTick})" class="list-group-item {{s.Selected ? 'active' : ''}} {{s.Active ? '' : 'disabled'}}" ng-repeat="s in timeSlots">{{s.StartTime}} - {{s.EndTime}}</a>
+    </div>
+
+    <div class="row action">
+        <div class="col-xs-6">
+            <a ui-sref="booking.services({categoryId: booking.Category.ID, makeId: booking.Car.Make.ID, modelId: booking.Car.Model.ID})" class="btn btn-block btn-default">Back</a>
+        </div>
+
+        <div class="col-xs-6">
+            <a ui-sref="booking.personal({categoryId: booking.Category.ID, makeId: booking.Car.Make.ID, modelId: booking.Car.Model.ID, serviceId: booking.Service.ID, schedule: booking.Schedule})" class="btn btn-block btn-info" ng-disabled="booking.Schedule === ''">Next</a>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,21 @@
+﻿<div class="booking">
+    <div class="form-group">
+        <label for="regNumber">Registration Number<span class="red">*</span>:</label>
+        <input type="text" class="form-control" id="regNumber" ng-model="booking.Car.RegNumber" ng-required="true"/>
+    </div>
+
+    <div class="form-group">
+        <label for="service_address"><span ng-show="booking.Service.ServiceTypeId === '1'">Pickup/Drop Address</span><span ng-show="booking.Service.ServiceTypeId === '2'">Address</span><span class="red">*</span>:</label>
+        <input type="text" class="form-control" id="service_address" ng-model="booking.Car.ServiceAddress" ng-required="true" />
+    </div>
+
+    <div class="row action">
+        <div class="col-xs-6">
+            <a ui-sref="booking.personal({categoryId: booking.Category.ID, makeId: booking.Car.Make.ID, modelId: booking.Car.Model.ID, serviceId: booking.Service.ID, schedule: booking.Schedule})" class="btn btn-block btn-default">Back</a>
+        </div>
+
+        <div class="col-xs-6">
+            <a ui-sref="booking.payment({categoryId: booking.Category.ID, makeId: booking.Car.Make.ID, modelId: booking.Car.Model.ID, serviceId: booking.Service.ID, schedule: booking.Schedule, name: booking.Personal.Name, email: booking.Personal.Email, phone: booking.Personal.Phone, regNumber: booking.Car.RegNumber, serviceAddress: booking.Car.ServiceAddress})" class="btn btn-block btn-info">Next</a>
+        </div>
+    </div>
+</div>

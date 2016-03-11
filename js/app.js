@@ -1,5 +1,12 @@
 ﻿(function () {
-    var app = angular.module('tuneFleetStore', ['angular-loading-bar', 'ngDialog']);
+    var app = angular.module('tuneFleetStore', [
+        'ngRoute',
+        'ngResource',
+        'ui.router',
+        'angular-loading-bar',
+        'ngDialog',
+        'booking-controller'
+    ]);
 
     //app.constant('baseUrl', 'http://localhost:14550/');
     app.constant('baseUrl', 'http://tunefleet.braindemo.com/');
@@ -32,264 +39,72 @@
         }
     ]);
 
+    app.config([
+        '$stateProvider', '$urlRouterProvider', function ($stateProvider, $urlRouterProvider) {
+            $stateProvider.state("welcome", {
+                    url: "/",
+                    templateUrl: 'templates/home.html'
+                }).state("login", {
+                    url: "/login",
+                    templateUrl: 'templates/login.html'
+                }).state("register", {
+                    url: "/register",
+                    templateUrl: 'templates/register.html'
+                }).state("help", {
+                    url: "/help",
+                    templateUrl: 'templates/help.html'
+                }).state("contact", {
+                    url: "/contact",
+                    templateUrl: 'templates/contact.html'
+                }).state('booking', {
+                    url: '/booking',
+                    templateUrl: 'templates/booking.html',
+                    controller: 'BookingController'
+                }).state('booking.locate', {
+                    url: '/locate',
+                    templateUrl: 'templates/booking-locate.html'
+                }).state('booking.categories', {
+                    url: '/categories',
+                    templateUrl: 'templates/booking-categories.html'
+                }).state('booking.vehicle', {
+                    url: '/categories/:categoryId/vehicle',
+                    templateUrl: 'templates/booking-vehicle.html'
+                }).state('booking.services', {
+                    url: '/categories/:categoryId/vehicle/:makeId/:modelId/services',
+                    templateUrl: 'templates/booking-services.html'
+                }).state('booking.schedule', {
+                    url: '/categories/:categoryId/vehicle/:makeId/:modelId/services/:serviceId/schedule',
+                    templateUrl: 'templates/booking-schedule.html'
+                }).state('booking.personal', {
+                    url: '/categories/:categoryId/vehicle/:makeId/:modelId/services/:serviceId/schedule/:schedule/personal',
+                    templateUrl: 'templates/booking-personal.html'
+                }).state('booking.car', {
+                    url: '/categories/:categoryId/vehicle/:makeId/:modelId/services/:serviceId/schedule/:schedule/personal/:name/:email/:phone/car',
+                    templateUrl: 'templates/booking-car.html'
+                }).state('booking.payment', {
+                    url: '/categories/:categoryId/vehicle/:makeId/:modelId/services/:serviceId/schedule/:schedule/personal/:name/:email/:phone/car/:regNumber/:serviceAddress/payment',
+                    templateUrl: 'templates/booking-payment.html'
+                }).state('booking.confirmation', {
+                    url: '/categories/:categoryId/vehicle/:makeId/:modelId/services/:serviceId/schedule/:schedule/personal/:name/:email/:phone/car/:regNumber/:serviceAddress/payment/:paymentMethod/confirmation',
+                    templateUrl: 'templates/booking-confirmation.html'
+                });
+
+            $urlRouterProvider.otherwise('/');
+        }
+    ]);
+
     app.controller('TuneFleetController', [
-        '$scope', '$http', '$log', '$interval', 'baseUrl', function ($scope, $http, $log, $interval, baseUrl) {
-            $scope.Authorized = false;
-            $scope.states = [];
-            $scope.cities = [];
-            $scope.areas = [];
-            $scope.categories = [];
-            $scope.services = [];
-            $scope.timeSlots = [];
-            $scope.booking = {};
-            $scope.user = {};
-            $scope.hideStep = 1;
-            $scope.loaded = false;
+        '$scope', '$http', '$log', '$interval', 'baseUrl', '$location', function ($scope, $http, $log, $interval, baseUrl, $location) {
+            $scope.loggedIn = false;
+            $scope.showMenu = true;
 
-            $scope.$on('cfpLoadingBar:completed', function () {
-                //console.log('Loading Finished');
-                $scope.loaded = true;
+            $scope.$on('$locationChangeStart', function (event) {
+                console.log('Route changed');
+                console.log($location.path());
+
+                if ($location.path() === '/login' || $location.path() === '/register') $scope.showMenu = false;
+                else $scope.showMenu = true;
             });
-
-            $scope.fetchStates = function () {
-                $http.jsonp(baseUrl, {
-                    params: {
-                        'request': 'states',
-                        'callback': 'JSON_CALLBACK'
-                }}).success(function (result) {
-                    $scope.states = result.data;
-
-                    $scope.user.State = $scope.states[0];
-
-                    if (!localStorage["stateId"]) {
-                        $scope.booking.State = $scope.states[0];
-                    } else {
-                        var stateId = localStorage["stateId"];
-
-                        console.log(stateId);
-
-                        $.each($scope.states, function(index, value) {
-                            if (value.ID === stateId) $scope.booking.State = value;
-                        });
-
-                        console.log($scope.booking.State);
-                    }
-                    
-                    console.log("States loaded - " + $scope.states.length);
-                }).error(function (data, status, headers, config) {
-                    console.log("Error [states] - " + status);
-                });
-            };
-
-            $scope.fetchCities = function(stateId) {
-                $http.jsonp(baseUrl, {
-                    params: {
-                        'request': 'cities',
-                        'callback': 'JSON_CALLBACK',
-                        'state_id': stateId
-                    }
-                }).success(function(result) {
-                    $scope.cities = result.data;
-
-                    $scope.user.City = $scope.cities[0];
-                    
-                    if (!localStorage["cityId"]) {
-                        $scope.booking.City = $scope.cities[0];
-                    } else {
-                        var cityId = localStorage["cityId"];
-
-                        console.log(cityId);
-
-                        $.each($scope.cities, function (index, value) {
-                            if (value.ID === cityId) $scope.booking.City = value;
-                        });
-
-                        console.log($scope.booking.City);
-                    }
-
-                    console.log("Cities loaded - " + $scope.cities.length);
-                }).error(function(data, status, headers, config) {
-                    console.log("Error [cities] - " + status);
-                });
-            };
-
-            $scope.fetchAreas = function(cityId) {
-                $http.jsonp(baseUrl, {
-                    params: {
-                        'request': 'areas',
-                        'callback': 'JSON_CALLBACK',
-                        'city_id': cityId
-                    }
-                }).success(function(result) {
-                    $scope.areas = result.data;
-
-                    if (!localStorage["areaId"]) {
-                        $scope.booking.Area = $scope.areas[0];
-                    } else {
-                        var areaId = localStorage["areaId"];
-
-                        console.log(areaId);
-
-                        $.each($scope.areas, function (index, value) {
-                            if (value.ID === areaId) $scope.booking.Area = value;
-                        });
-
-                        console.log($scope.booking.Area);
-
-                        $scope.startSearch($scope.booking);
-                    }
-
-                    console.log("Areas loaded - " + $scope.areas.length);
-                }).error(function(data, status, headers, config) {
-                    console.log("Error [areas] - " + status);
-                });
-            };
-
-            $scope.fetchCategories = function () {
-                $http.jsonp(baseUrl, {
-                    params: {
-                        'request': 'categories',
-                        'callback': 'JSON_CALLBACK'
-                    }
-                }).success(function (result) {
-                    $scope.categories = result.data;
-                    $scope.hideStep = 2;
-                    console.log("Categories loaded - " + $scope.categories.length);
-                }).error(function (data, status, headers, config) {
-                    console.log("Error [categories] - " + status);
-                });
-            };
-
-            $scope.fetchServices = function (categoryId, areaId) {
-                $http.jsonp(baseUrl, {
-                    params: {
-                        'request': 'services',
-                        'callback': 'JSON_CALLBACK',
-                        'category_id': categoryId,
-                        'area_id': areaId
-                    }
-                }).success(function (result) {
-                    $scope.services = result.data;
-                    $scope.hideStep = 3;
-                    console.log("Services loaded - " + $scope.services.length);
-                }).error(function (data, status, headers, config) {
-                    console.log("Error [services] - " + status);
-                });
-            };
-
-            $scope.loadDefault = function() {
-                $scope.fetchStates();
-
-                //localStorage = {};
-
-                if (!localStorage) {
-                    localStorage = {};
-                }
-            };
-
-            $scope.$watch('booking.State', function (newVal, oldVal) {
-                if ($scope.booking.State) {
-                    if ($scope.booking.State.ID > 0) {
-                        $scope.fetchCities($scope.booking.State.ID);
-                    }
-
-                    console.log("State changed - " + $scope.booking.State.ID);
-                }
-            }, true);
-
-            $scope.$watch('booking.City', function (newVal, oldVal) {
-                if ($scope.booking.City) {
-                    if ($scope.booking.City.ID > 0) {
-                        $scope.fetchAreas($scope.booking.City.ID);
-                    }
-
-                    console.log("City changed - " + $scope.booking.City.ID);
-                }
-            }, true);
-
-            $scope.startSearch = function (booking) {
-                $scope.categories = [];
-                $scope.fetchCategories();
-
-                localStorage.stateId = booking.State.ID;
-                localStorage.cityId = booking.City.ID;
-                localStorage.areaId = booking.Area.ID;
-            };
-
-            $scope.showServices = function (category) {
-                $scope.services = [];
-                $scope.fetchServices(category.ID, $scope.booking.Area.ID);
-            };
-
-            $scope.goBack = function(step) {
-                $scope.hideStep = step - 1;
-                console.log($scope.hideStep);
-            };
-
-            $scope.generateUrl = function (icon) {
-                console.log(baseUrl + icon);
-                return icon;
-            };
-
-            $scope.selectService = function (service) {
-                $scope.service = service;
-                $scope.getTimeSlots(service.Duration);
-                $scope.hideStep = 4;
-            };
-
-            $scope.changeLocation = function() {
-                $scope.categories = [];
-                $scope.services = [];
-                $scope.hideStep = 1;
-            };
-
-            $scope.updateSchedule = function(schedule) {
-                $scope.hideStep = 5;
-            };
-
-            $scope.updateUser = function(user) {
-                $scope.hideStep = 6;
-            };
-
-            $scope.getTimeSlots = function (duration) {
-                if (typeof duration === "undefined") return [];
-
-                var currentTime = moment();
-                var startTime = moment(currentTime.format('MM-DD-YYYY') + ' 10:00 AM', 'MM-DD-YYYY HH:mm A');
-                var endTime = moment(currentTime.format('MM-DD-YYYY') + ' 18:00 PM', 'MM-DD-YYYY HH:mm A');
-                
-                for (var m = startTime; m.isBefore(endTime); m.add(duration, 'minutes')) {
-                    var st = moment(m.format("MM-DD-YYYY HH:mm A"), "MM-DD-YYYY HH:mm A");
-                    var et = moment(m.format("MM-DD-YYYY HH:mm A"), "MM-DD-YYYY HH:mm A").add(duration, 'minutes');
-                    var item = {
-                        Date: m,
-                        StartTime: st.format("HH:mm A"),
-                        EndTime: et.format("HH:mm A"),
-                        Selected: false,
-                        Active: st.isSameOrAfter(currentTime)
-                    };
-
-                    //console.log(st.format('YYYY-MM-DD HH:mm A'));
-                    //console.log(et.format('YYYY-MM-DD HH:mm A'));
-                    //console.log(item);
-                    
-                    $scope.timeSlots.push(item);
-                }
-            };
-
-            $scope.selectTime = function (schedule) {
-                if (!schedule.Active) return;
-
-                $scope.schedule.Timeslot = schedule;
-
-                $.each($scope.timeSlots, function(index, value) {
-                    $scope.timeSlots[index].Selected = false;
-
-                    if (value === schedule) {
-                        $scope.timeSlots[index].Selected = true;
-                    }
-                });
-            };
         }
     ]);
 })();

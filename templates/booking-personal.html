@@ -1,0 +1,26 @@
+﻿<div class="booking">
+    <div class="form-group">
+        <label for="name">Name<span class="red">*</span>:</label>
+        <input type="text" class="form-control" id="name" ng-model="booking.Personal.Name" placeholder="Your Name" ng-required="true" />
+    </div>
+
+    <div class="form-group">
+        <label for="email">Email<span class="red">*</span>:</label>
+        <input type="email" class="form-control" id="email" ng-model="booking.Personal.Email" placeholder="Email" ng-required="true" />
+    </div>
+
+    <div class="form-group">
+        <label for="phone">Phone<span class="red">*</span>:</label>
+        <input type="tel" class="form-control" id="phone" ng-model="booking.Personal.Phone" placeholder="Phone" ng-required="true" />
+    </div>
+
+    <div class="row action">
+        <div class="col-xs-6">
+            <a ui-sref="booking.schedule({categoryId: booking.Category.ID, makeId: booking.Car.Make.ID, modelId: booking.Car.Model.ID, serviceId: booking.Service.ID})" class="btn btn-block btn-default">Back</a>
+        </div>
+
+        <div class="col-xs-6">
+            <a ui-sref="booking.car({categoryId: booking.Category.ID, makeId: booking.Car.Make.ID, modelId: booking.Car.Model.ID, serviceId: booking.Service.ID, schedule: booking.Schedule, name: booking.Personal.Name, email: booking.Personal.Email, phone: booking.Personal.Phone})" class="btn btn-block btn-info">Next</a>
+        </div>
+    </div>
+</div>

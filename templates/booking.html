@@ -1,0 +1,29 @@
+﻿<div class="row">
+    <div class="col-sm-8 col-sm-offset-2">
+
+        <div id="form-container">
+
+            <div class="page-header text-center">
+                <h2>Book A Service</h2>
+
+                <div id="status-buttons" class="text-center">
+                    <a ui-sref-active="active" ui-sref=".locate"><span>1</span> Locate</a>
+                    <a ui-sref-active="active" ui-sref=".categories"><span>2</span> Categories</a>
+                    <a ui-sref-active="active" ui-sref=".vehicle({categoryId: booking.Category.ID})"><span>3</span> Vehicle</a>
+                    <a ui-sref-active="active" ui-sref=".services({categoryId: booking.Category.ID, makeId: booking.Car.Make.ID, modelId: booking.Car.Model.ID})"><span>4</span> Services</a>
+                    <a ui-sref-active="active" ui-sref=".schedule({categoryId: booking.Category.ID, makeId: booking.Car.Make.ID, modelId: booking.Car.Model.ID, serviceId: booking.Service.ID})"><span>5</span> Schedule</a>
+                    <a ui-sref-active="active" ui-sref=".personal({categoryId: booking.Category.ID, makeId: booking.Car.Make.ID, modelId: booking.Car.Model.ID, serviceId: booking.Service.ID, schedule: booking.Schedule})"><span>6</span> Personal</a>
+                    <a ui-sref-active="active" ui-sref=".car({categoryId: booking.Category.ID, makeId: booking.Car.Make.ID, modelId: booking.Car.Model.ID, serviceId: booking.Service.ID, schedule: booking.Schedule, name: booking.Personal.Name, email: booking.Personal.Email, phone: booking.Personal.Phone})"><span>7</span> Car</a>
+                    <a ui-sref-active="active" ui-sref=".payment({categoryId: booking.Category.ID, makeId: booking.Car.Make.ID, modelId: booking.Car.Model.ID, serviceId: booking.Service.ID, schedule: booking.Schedule, name: booking.Personal.Name, email: booking.Personal.Email, phone: booking.Personal.Phone, regNumber: booking.Car.RegNumber, serviceAddress: booking.Car.ServiceAddress})"><span>8</span> Payment</a>
+                    <a ui-sref-active="active" ui-sref=".confirmation({categoryId: booking.Category.ID, makeId: booking.Car.Make.ID, modelId: booking.Car.Model.ID, serviceId: booking.Service.ID, schedule: booking.Schedule, name: booking.Personal.Name, email: booking.Personal.Email, phone: booking.Personal.Phone, regNumber: booking.Car.RegNumber, serviceAddress: booking.Car.ServiceAddress, paymentMethod: booking.Payment})"><span>9</span> Confirmation</a>
+                </div>
+            </div>
+
+            <form id="signup-form" ng-submit="processForm()" data-ng-init="loadDefault()">
+                <div id="form-views" ui-view></div>
+            </form>
+        </div><br />
+
+        <!--<pre>{{ booking }}</pre>-->
+    </div>
+</div>

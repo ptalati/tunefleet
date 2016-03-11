@@ -1,0 +1,25 @@
+﻿<div class="booking">
+    <div class="form-group" ng-show="states.length > 1">
+        <select class="form-control" name="state" ng-model="booking.Search.State" ng-required="true" ng-options="s.Name for s in states | orderBy:'Name' track by s.ID">
+            <option value=''>Choose State...</option>
+        </select>
+    </div>
+
+    <div class="form-group" ng-show="cities.length > 1">
+        <select class="form-control" name="city" ng-model="booking.Search.City" ng-required="true" ng-options="c.Name for c in cities | orderBy:'Name' track by c.ID">
+            <option value=''>Choose City...</option>
+        </select>
+    </div>
+
+    <div class="form-group" ng-show="areas.length > 0">
+        <select class="form-control" name="area" ng-model="booking.Search.Area" ng-required="true" ng-options="a.Name for a in areas | orderBy:'Name' track by a.ID">
+            <option value=''>Choose Area...</option>
+        </select>
+    </div>
+
+    <button type="submit" class="btn btn-default btn-block" ng-show="searchForm.city.$valid && searchForm.state.$valid && searchForm.area.$valid">Search</button>
+
+    <a ui-sref="booking.categories" class="btn btn-block btn-info">
+        Next Section <span class="glyphicon glyphicon-circle-arrow-right"></span>
+    </a>
+</div>

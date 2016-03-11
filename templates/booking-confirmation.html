@@ -1,0 +1,58 @@
+﻿<div class="booking">
+    <table class="table">
+        <tr>
+            <td>Name</td>
+            <td>{{booking.Personal.Name}}</td>
+        </tr>
+        <tr>
+            <td>Email</td>
+            <td>{{booking.Personal.Email}}</td>
+        </tr>
+        <tr>
+            <td>Phone</td>
+            <td>{{booking.Personal.Phone}}</td>
+        </tr>
+        <tr>
+            <td>Service</td>
+            <td>{{booking.Category.Name}} > {{booking.Service.Name}}</td>
+        </tr>
+        <tr>
+            <td>Type</td>
+            <td>{{booking.Service.ServiceTypeName}}</td>
+        </tr>
+        <tr>
+            <td>Price</td>
+            <td>&#8377; {{booking.Service.Price | number:2}}</td>
+        </tr>
+        <tr>
+            <td>Payment</td>
+            <td>{{getDisplayName(booking.Payment)}}</td>
+        </tr>
+        <tr>
+            <td>Car</td>
+            <td>{{booking.Car.Make.Name}} - {{booking.Car.Model.Name}}</td>
+        </tr>
+        <tr>
+            <td>Reg. Number</td>
+            <td>{{booking.Car.RegNumber}}</td>
+        </tr>
+        <tr>
+            <td><span ng-show="booking.Service.ServiceTypeId === '1'">Pickup/Drop Address</span><span ng-show="booking.Service.ServiceTypeId === '2'">Address</span></td>
+            <td>{{booking.Car.ServiceAddress}}</td>
+        </tr>
+        <tr>
+            <td>Schedule</td>
+            <td>{{getDisplayDate(booking.Schedule)}}</td>
+        </tr>
+    </table>
+
+    <div class="row action">
+        <div class="col-xs-6">
+            <a ui-sref="booking.payment({categoryId: booking.Category.ID, makeId: booking.Car.Make.ID, modelId: booking.Car.Model.ID, serviceId: booking.Service.ID, schedule: booking.Schedule, name: booking.Personal.Name, email: booking.Personal.Email, phone: booking.Personal.Phone, regNumber: booking.Car.RegNumber, serviceAddress: booking.Car.ServiceAddress})" class="btn btn-block btn-default">Back</a>
+        </div>
+
+        <div class="col-xs-6">
+            <a href="javascript:void(0);" class="btn btn-block btn-info">Confirm Booking</a>
+        </div>
+    </div>
+</div>

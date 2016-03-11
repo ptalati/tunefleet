@@ -1,0 +1,11 @@
+﻿<div class="booking">
+    <div class="col-sm-6 col-md-4 col" ng-repeat="c in categories | orderBy:'Name' track by c.ID">
+        <div class="thumbnail">
+            <a ui-sref="booking.vehicle({categoryId: c.ID})"><img data-ng-src="{{generateUrl(c.Icon)}}" alt="{{c.Name}}" /></a>
+        </div>
+    </div>
+
+    <div class="clearfix"></div>
+
+    <a ui-sref="booking.vehicle({categoryId: booking.Category.ID})" class="btn btn-block btn-info">Start Booking</a>
+</div>
