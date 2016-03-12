@@ -17,7 +17,7 @@
                 Search: {},
                 Category: {},
                 Service: {},
-                Schedule: '',
+                Schedule: {},
                 Personal: {},
                 Car: {}
             };
@@ -25,6 +25,14 @@
             $scope.schedule = {};
             $scope.hideStep = 1;
             $scope.loaded = false;
+            $scope.error = {
+                Status: false,
+                Message: ''
+            };
+            $scope.success = {
+                Status: false,
+                Message: ''
+            };
 
             $scope.$on('$locationChangeStart', function (event) {
                 console.log('Route changed');
@@ -51,7 +59,7 @@
                 }
 
                 if ($state.params.schedule) {
-                    $scope.booking.Schedule = $state.params.schedule;
+                    $scope.booking.Schedule.Date = $state.params.schedule;
                 }
 
                 if ($state.params.name) {
@@ -425,6 +433,83 @@
                 if (typeof payment === "undefined") return '';
                 
                 return payment === "cash_on_complete" ? "Cash On Complete" : "Pre-paid";
+            };
+
+            $scope.bookOrder = function(booking) {
+                $scope.error = {
+                    Status: false,
+                    Message: ''
+                };
+                $scope.success = {
+                    Status: false,
+                    Message: ''
+                };
+
+                $scope.currentUser = {};
+
+                if (localStorage.getItem("TuneFleetUser")) {
+                    $scope.currentUser = JSON.parse(localStorage.getItem("TuneFleetUser"))[0];
+                }
+
+                if (typeof $scope.currentUser.ID === "undefined") {
+                    console.log("User not available");
+
+                    $http.jsonp(baseUrl, {
+                        params: {
+                            request: 'registration',
+                            callback: 'JSON_CALLBACK',
+                            name: register.Name,
+                            email: register.Email,
+                            password: register.Password,
+                            phone: register.Phone
+                        }
+                    }).success(function(result) {
+                        if (typeof result.data.Error !== "undefined") {
+                            $scope.error = {
+                                Status: true,
+                                Message: result.data.Error
+                            };
+                        } else {
+                            localStorage.setItem("TuneFleetUser", JSON.stringify(result.data));
+
+                            $scope.orderCreate(booking);
+
+                            console.log("User created.");
+                        }
+                    }).error(function(data, status, headers, config) {
+                        console.log("Error [user create] - " + status);
+                    });
+                } else {
+                    console.log("User found");
+
+                    $scope.orderCreate(booking);
+                }
+            };
+
+            $scope.orderCreate = function(booking) {
+                $http.jsonp(baseUrl, {
+                    params: {
+                        request: 'order_insert',
+                        callback: 'JSON_CALLBACK',
+                        user_id: $scope.currentUser.ID,
+                        model_id: booking.Car.Model.ID,
+                        service_id: booking.Service.ID,
+                        price: booking.Service.Price,
+                        service_address: booking.Car.ServiceAddress,
+                        reg_number: booking.Car.RegNumber,
+                        payment: booking.Payment,
+                        schedule: moment(booking.Schedule.Date, "MMDDYYYYHHmm").format("YYYY-MM-DD hh:mm:ss")
+                    }
+                }).success(function(result) {
+                    $scope.success = {
+                        Status: true,
+                        Message: 'Order has been created. Thank you for using TuneFleet! Someone from TuneFleet will contact you about your order.'
+                    };
+
+                    console.log("Order created.");
+                }).error(function(data, status, headers, config) {
+                    console.log("Error [order create] - " + status);
+                });
             };
         }
     ]);

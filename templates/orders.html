@@ -1,0 +1,6 @@
+﻿<div class="orders">
+    <a href="#" class="btn btn-block btn-lg btn-default" ng-repeat="o in orders track by o.ID">
+        Order #{{o.ID}}: {{o.ServiceName}}<br/>
+        {{o.Schedule}}
+    </a>
+</div>

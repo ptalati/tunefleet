@@ -42,17 +42,17 @@
         </tr>
         <tr>
             <td>Schedule</td>
-            <td>{{getDisplayDate(booking.Schedule)}}</td>
+            <td>{{getDisplayDate(booking.Schedule.Date)}}</td>
         </tr>
     </table>
 
     <div class="row action">
         <div class="col-xs-6">
-            <a ui-sref="booking.payment({categoryId: booking.Category.ID, makeId: booking.Car.Make.ID, modelId: booking.Car.Model.ID, serviceId: booking.Service.ID, schedule: booking.Schedule, name: booking.Personal.Name, email: booking.Personal.Email, phone: booking.Personal.Phone, regNumber: booking.Car.RegNumber, serviceAddress: booking.Car.ServiceAddress})" class="btn btn-block btn-default">Back</a>
+            <a ui-sref="booking.payment({categoryId: booking.Category.ID, makeId: booking.Car.Make.ID, modelId: booking.Car.Model.ID, serviceId: booking.Service.ID, schedule: booking.Schedule.Date, name: booking.Personal.Name, email: booking.Personal.Email, phone: booking.Personal.Phone, regNumber: booking.Car.RegNumber, serviceAddress: booking.Car.ServiceAddress})" class="btn btn-block btn-default">Back</a>
         </div>
 
         <div class="col-xs-6">
-            <a href="javascript:void(0);" class="btn btn-block btn-info">Confirm Booking</a>
+            <input type="submit" class="btn btn-block btn-info" value="Confirm Booking" />
         </div>
     </div>
 </div>

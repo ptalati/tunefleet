@@ -10,7 +10,7 @@
     </div>
 
     <div class="list-group" ng-show="booking.Schedule.Date">
-        <a ui-sref="booking.personal({categoryId: booking.Category.ID, makeId: booking.Car.Make.ID, modelId: booking.Car.Model.ID, serviceId: booking.Service.ID, schedule: s.DateTick})" class="list-group-item {{s.Selected ? 'active' : ''}} {{s.Active ? '' : 'disabled'}}" ng-repeat="s in timeSlots">{{s.StartTime}} - {{s.EndTime}}</a>
+        <a ui-sref="booking.personal({categoryId: booking.Category.ID, makeId: booking.Car.Make.ID, modelId: booking.Car.Model.ID, serviceId: booking.Service.ID, schedule: s.DateTick})" class="list-group-item {{s.Selected ? 'active' : ''}} {{s.Active ? '' : 'disabled'}}" ng-disable="!s.Active" ng-repeat="s in timeSlots">{{s.StartTime}} - {{s.EndTime}}</a>
     </div>
 
     <div class="row action">
@@ -19,7 +19,7 @@
         </div>
 
         <div class="col-xs-6">
-            <a ui-sref="booking.personal({categoryId: booking.Category.ID, makeId: booking.Car.Make.ID, modelId: booking.Car.Model.ID, serviceId: booking.Service.ID, schedule: booking.Schedule})" class="btn btn-block btn-info" ng-disabled="booking.Schedule === ''">Next</a>
+            <a ui-sref="booking.personal({categoryId: booking.Category.ID, makeId: booking.Car.Make.ID, modelId: booking.Car.Model.ID, serviceId: booking.Service.ID, schedule: booking.Schedule.Date})" class="btn btn-block btn-info" ng-disabled="booking.Schedule === ''">Next</a>
         </div>
     </div>
 </div>

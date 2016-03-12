@@ -15,7 +15,7 @@
                 var options = {
                 	showOn: "button",
                 	buttonImageOnly: true,
-                    dateFormat: "dd-mm-yy",
+                	dateFormat: "dd-mm-yy",
                     onSelect: function(dateText) {
                         updateModel(dateText);
                     }

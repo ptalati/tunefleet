@@ -12,16 +12,21 @@
                     <a ui-sref-active="active" ui-sref=".vehicle({categoryId: booking.Category.ID})"><span>3</span> Vehicle</a>
                     <a ui-sref-active="active" ui-sref=".services({categoryId: booking.Category.ID, makeId: booking.Car.Make.ID, modelId: booking.Car.Model.ID})"><span>4</span> Services</a>
                     <a ui-sref-active="active" ui-sref=".schedule({categoryId: booking.Category.ID, makeId: booking.Car.Make.ID, modelId: booking.Car.Model.ID, serviceId: booking.Service.ID})"><span>5</span> Schedule</a>
-                    <a ui-sref-active="active" ui-sref=".personal({categoryId: booking.Category.ID, makeId: booking.Car.Make.ID, modelId: booking.Car.Model.ID, serviceId: booking.Service.ID, schedule: booking.Schedule})"><span>6</span> Personal</a>
-                    <a ui-sref-active="active" ui-sref=".car({categoryId: booking.Category.ID, makeId: booking.Car.Make.ID, modelId: booking.Car.Model.ID, serviceId: booking.Service.ID, schedule: booking.Schedule, name: booking.Personal.Name, email: booking.Personal.Email, phone: booking.Personal.Phone})"><span>7</span> Car</a>
-                    <a ui-sref-active="active" ui-sref=".payment({categoryId: booking.Category.ID, makeId: booking.Car.Make.ID, modelId: booking.Car.Model.ID, serviceId: booking.Service.ID, schedule: booking.Schedule, name: booking.Personal.Name, email: booking.Personal.Email, phone: booking.Personal.Phone, regNumber: booking.Car.RegNumber, serviceAddress: booking.Car.ServiceAddress})"><span>8</span> Payment</a>
-                    <a ui-sref-active="active" ui-sref=".confirmation({categoryId: booking.Category.ID, makeId: booking.Car.Make.ID, modelId: booking.Car.Model.ID, serviceId: booking.Service.ID, schedule: booking.Schedule, name: booking.Personal.Name, email: booking.Personal.Email, phone: booking.Personal.Phone, regNumber: booking.Car.RegNumber, serviceAddress: booking.Car.ServiceAddress, paymentMethod: booking.Payment})"><span>9</span> Confirmation</a>
+                    <a ui-sref-active="active" ui-sref=".personal({categoryId: booking.Category.ID, makeId: booking.Car.Make.ID, modelId: booking.Car.Model.ID, serviceId: booking.Service.ID, schedule: booking.Schedule.Date})"><span>6</span> Personal</a>
+                    <a ui-sref-active="active" ui-sref=".car({categoryId: booking.Category.ID, makeId: booking.Car.Make.ID, modelId: booking.Car.Model.ID, serviceId: booking.Service.ID, schedule: booking.Schedule.Date, name: booking.Personal.Name, email: booking.Personal.Email, phone: booking.Personal.Phone})"><span>7</span> Car</a>
+                    <a ui-sref-active="active" ui-sref=".payment({categoryId: booking.Category.ID, makeId: booking.Car.Make.ID, modelId: booking.Car.Model.ID, serviceId: booking.Service.ID, schedule: booking.Schedule.Date, name: booking.Personal.Name, email: booking.Personal.Email, phone: booking.Personal.Phone, regNumber: booking.Car.RegNumber, serviceAddress: booking.Car.ServiceAddress})"><span>8</span> Payment</a>
+                    <a ui-sref-active="active" ui-sref=".confirmation({categoryId: booking.Category.ID, makeId: booking.Car.Make.ID, modelId: booking.Car.Model.ID, serviceId: booking.Service.ID, schedule: booking.Schedule.Date, name: booking.Personal.Name, email: booking.Personal.Email, phone: booking.Personal.Phone, regNumber: booking.Car.RegNumber, serviceAddress: booking.Car.ServiceAddress, paymentMethod: booking.Payment})"><span>9</span> Confirmation</a>
                 </div>
             </div>
 
-            <form id="signup-form" ng-submit="processForm()" data-ng-init="loadDefault()">
+            <div class="alert alert-danger" role="alert" ng-show="error.Status">{{error.Message}}</div>
+            <div class="alert alert-success" role="alert" ng-show="success.Status">{{success.Message}}</div>
+
+            <form id="signup-form" ng-submit="bookOrder(booking)" data-ng-init="loadDefault()" ng-hide="success.Status">
                 <div id="form-views" ui-view></div>
             </form>
+
+            <a ui-sref="orders" class="btn btn-block btn-default" ng-show="success.Status">My Orders</a>
         </div><br />
 
         <!--<pre>{{ booking }}</pre>-->

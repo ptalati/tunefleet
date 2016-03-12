@@ -8,6 +8,8 @@
 
 #main { padding-top: 4.5em; }
 
+#loading-bar-spinner { width: 100%;height: 100%; background: #094fc2; padding: 0; margin: -10px 0 0 -10px; }
+#loading-bar-spinner .spinner { position: absolute; top: 50%; left: 50%; width: 170px; height: 60px; text-align: center; margin-top: -30px; margin-left: -85px; }
 #loading-bar .bar { background: #33ba3a; height: 4px; }
 #loading-bar-spinner .spinner-icon { width: 18px; height: 18px; border: solid 4px transparent; border-top-color: #cadd22; border-left-color: #cadd22; border-radius: 10px; }
 

@@ -1,23 +1,36 @@
 ﻿<div class="register">
-    <form id="form-container">
+    <div class="alert alert-danger" role="alert" ng-show="error.Status">{{error.Message}}</div>
+    <div class="alert alert-success" role="alert" ng-show="success.Status">{{success.Message}}</div>
+    
+    <form name="registerForm" class="form-container" ng-submit="registerForm.$valid && registerUser(register)" ng-hide="success.Status">
+        <div class="form-group">
+            <label for="name">Name<span class="red">*</span>:</label>
+            <input type="text" class="form-control" id="name" ng-model="register.Name" ng-required="true" />
+        </div>
+
         <div class="form-group">
             <label for="email">Email<span class="red">*</span>:</label>
-            <input type="email" class="form-control" id="email" ng-model="login.Email" ng-required="true" />
+            <input type="email" class="form-control" id="email" ng-model="register.Email" ng-required="true" />
         </div>
 
         <div class="form-group">
             <label for="password">Password<span class="red">*</span>:</label>
-            <input type="password" class="form-control" id="password" ng-model="login.Password" ng-required="true" />
+            <input type="password" class="form-control" id="password" ng-model="register.Password" ng-required="true" />
         </div>
 
         <div class="form-group">
             <label for="confirm_password">Confirm Password<span class="red">*</span>:</label>
-            <input type="password" class="form-control" id="confirm_password" ng-model="login.ConfirmPassword" ng-required="true" />
+            <input type="password" class="form-control" id="confirm_password" ng-model="register.ConfirmPassword" ng-required="true" />
         </div>
 
-        <input type="submit" class="btn btn-info btn-block" value="Login" />
+        <div class="form-group">
+            <label for="phone">Phone<span class="red">*</span>:</label>
+            <input type="tel" class="form-control" id="phone" ng-model="register.Phone" ng-required="true" />
+        </div>
+
+        <input type="submit" class="btn btn-info btn-block" value="Register" />
         <a ui-sref="welcome" class="btn btn-block btn-default">Cancel</a>
-    </form><br />
+    </form><br/>
 
     <a ui-sref="login" class="btn btn-block btn-default">Already have an account?</a>
 </div>

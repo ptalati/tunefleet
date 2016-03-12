@@ -31,6 +31,9 @@
     <script type="text/javascript" src="js/directives/ui.datepicker.js"></script>
     <script type="text/javascript" src="js/app.js"></script>
     <script type="text/javascript" src="js/controllers/booking.js"></script>
+    <script type="text/javascript" src="js/controllers/register.js"></script>
+    <script type="text/javascript" src="js/controllers/login.js"></script>
+    <script type="text/javascript" src="js/controllers/orders.js"></script>
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -67,7 +70,7 @@
                         <li><a ui-sref="welcome">Offers</a></li>
                         <li><a ui-sref="help">Help</a></li>
                         <li><a ui-sref="contact">Contact</a></li>
-                        <li><a ui-sref="logout" ng-show="loggedIn">Logout</a></li>
+                        <li><a ui-sref="logout" ng-show="loggedIn">Logout {{user.Name}}</a></li>
                     </ul>
                 </nav>
             </div>
