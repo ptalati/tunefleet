@@ -23,7 +23,7 @@
             };
             $scope.user = {};
             $scope.schedule = {};
-            $scope.hideStep = 1;
+            $scope.currentUser = {};
             $scope.loaded = false;
             $scope.error = {
                 Status: false,
@@ -45,7 +45,8 @@
                     $.each($scope.categories, function (i, v) {
                         if (v.ID === $state.params.categoryId) {
                             $scope.booking.Category = v;
-                            $scope.fetchServices(v.ID, localStorage["areaId"]);
+
+                            if ($scope.services.length === 0) $scope.fetchServices(v.ID, localStorage["areaId"]);
                         }
                     });
                 }
@@ -78,7 +79,8 @@
                     $.each($scope.makes, function (i, v) {
                         if (v.ID === $state.params.makeId) {
                             $scope.booking.Car.Make = v;
-                            $scope.fetchModels(v.ID);
+
+                            if ($scope.models.length === 0) $scope.fetchModels(v.ID);
                         }
                     });
                 }
@@ -205,7 +207,6 @@
                     }
                 }).success(function (result) {
                     $scope.categories = result.data;
-                    $scope.hideStep = 2;
                     $scope.routeChanges();
                     console.log("Categories loaded - " + $scope.categories.length);
                 }).error(function (data, status, headers, config) {
@@ -223,7 +224,6 @@
                     }
                 }).success(function (result) {
                     $scope.services = result.data;
-                    $scope.hideStep = 3;
                     console.log("Services loaded - " + $scope.services.length);
                 }).error(function (data, status, headers, config) {
                     console.log("Error [services] - " + status);
@@ -301,6 +301,11 @@
                 $scope.fetchStates();
                 $scope.fetchMakes();
                 $scope.fetchCategories();
+                
+                if (localStorage.getItem("TuneFleetUser")) {
+                    $scope.currentUser = JSON.parse(localStorage.getItem("TuneFleetUser"))[0];
+                    $scope.booking.Personal = $scope.currentUser;
+                }
 
                 //localStorage = {};
 
@@ -382,47 +387,9 @@
                 $scope.fetchServices(category.ID, $scope.booking.Search.Area.ID);
             };
 
-            $scope.goBack = function (step) {
-                $scope.hideStep = step - 1;
-                console.log($scope.hideStep);
-            };
-
             $scope.generateUrl = function (icon) {
                 console.log(baseUrl + icon);
                 return icon;
-            };
-
-            $scope.selectService = function (service) {
-                $scope.booking.Service = service;
-                $scope.hideStep = 4;
-            };
-
-            $scope.changeLocation = function () {
-                $scope.categories = [];
-                $scope.services = [];
-                $scope.hideStep = 1;
-            };
-
-            $scope.updateSchedule = function (schedule) {
-                $scope.hideStep = 5;
-            };
-
-            $scope.updateUser = function (user) {
-                $scope.hideStep = 6;
-            };
-
-            $scope.selectTime = function (schedule) {
-                if (!schedule.Active) return;
-
-                $scope.schedule.Timeslot = schedule;
-
-                $.each($scope.timeSlots, function (index, value) {
-                    $scope.timeSlots[index].Selected = false;
-
-                    if (value === schedule) {
-                        $scope.timeSlots[index].Selected = true;
-                    }
-                });
             };
 
             $scope.getDisplayDate = function(schedule) {

@@ -6,6 +6,7 @@
         'angular-loading-bar',
         'ngDialog',
         'ui.datepicker',
+        'app.loading',
         'booking-controller',
         'register-controller',
         'login-controller',
